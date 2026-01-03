@@ -20,11 +20,18 @@
 
 require 'fileutils'
 require 'yaml'
+require 'open3'
 require 'pathname'
 
 def make_mdre(ch, p2r, md_dir, re_dir)
   md_file = md_dir.join(ch.sub(/\.re\Z/, '.md'))
-  system("#{p2r} #{md_file} > #{re_dir.join(ch)}")
+  output, _, _ = Open3.capture3("#{p2r} #{md_file}")
+  # convert image dir
+  output.gsub!(/\.\/img\//, '')
+  File.open(re_dir.join(ch), "w") do |f|
+    f.puts(output)
+  end
+  #system("#{p2r} #{md_file} > #{re_dir.join(ch)}")
 end
 
 desc 'run pandoc2review'
@@ -38,7 +45,6 @@ task :pandoc2review do
     File.write("#{re_path}/THIS_FOLDER_IS_TEMPORARY", '')
   end
 
-  p Dir.pwd
   catalog = YAML.load_file(md_dir.join('catalog.yml'))
   %w(PREDEF CHAPS APPENDIX POSTDEF).each do |block|
     if catalog[block].kind_of?(Array)
@@ -49,10 +55,6 @@ task :pandoc2review do
   end
 end
 
-CLEAN.include('_refiles')
+CLEAN.include('_refiles/*.re')
 Rake::Task[BOOK_PDF].enhance([:pandoc2review])
 Rake::Task[BOOK_EPUB].enhance([:pandoc2review])
-Rake::Task[WEBROOT].enhance([:pandoc2review])
-Rake::Task[TEXTROOT].enhance([:pandoc2review])
-Rake::Task[TOPROOT].enhance([:pandoc2review])
-Rake::Task[IDGXMLROOT].enhance([:pandoc2review])

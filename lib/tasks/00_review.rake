@@ -24,16 +24,30 @@ require 'date'
 require 'pathname'
 require 'psych'
 
+def load_review_config(config_file_path)
+  config_file_path = Pathname(config_file_path)
+  review_config = Psych.safe_load(File.read(config_file_path), permitted_classes: [Date])
+  if review_config.has_key?("inherit")
+    review_config["inherit"].each do |inherit|
+      review_config.merge!(Psych.safe_load(File.read(config_file_path.parent + inherit), permitted_classes: [Date]))
+    end
+  end
+
+  review_config
+end
+
 ARTICLE_DIR = Pathname('article')
 OUTPUT_DIR = Pathname('output')
 CONFIG_FILE = ENV['REVIEW_CONFIG_FILE'] || 'article/config.yml'
 CATALOG_FILE = ENV['REVIEW_CATALOG_FILE'] || 'article/catalog.yml'
 
-review_config = Psych.safe_load(File.read(CONFIG_FILE), permitted_classes: [Date])
+review_config = load_review_config(CONFIG_FILE)
 
 BOOK = ENV['REVIEW_BOOK'] || review_config['bookname'] ||'book'
-BOOK_PDF = BOOK + '.pdf'
-BOOK_EPUB = BOOK + '.epub'
+OUTPUT_PDF = BOOK + ".pdf"
+BOOK_PDF = BOOK + ".#{DateTime.now.strftime("%Y%m%d%H%M%S")}.pdf"
+OUTPUT_EPUB = BOOK + ".epub"
+BOOK_EPUB = BOOK + ".#{DateTime.now.strftime("%Y%m%d%H%M%S")}.epub"
 WEBROOT = ENV['REVIEW_WEBROOT'] || 'webroot'
 TEXTROOT = BOOK + '-text'
 TOPROOT = BOOK + '-text'
@@ -111,12 +125,10 @@ SRC_EPUB = FileList['*.css']
 SRC_PDF = FileList['layouts/*.erb', 'sty/**/*.sty']
 
 file BOOK_PDF => SRC + SRC_PDF do
-  p BOOK
-  p Dir.pwd
   FileUtils.rm_rf([BOOK_PDF, BOOK, BOOK + '-pdf'])
   sh "review-pdfmaker #{PDF_OPTIONS} #{CONFIG_FILE} 2>&1"
 
-  FileUtils.move(ARTICLE_DIR+BOOK_PDF, OUTPUT_DIR)
+  FileUtils.move(ARTICLE_DIR+OUTPUT_PDF, OUTPUT_DIR+BOOK_PDF)
 end
 
 file BOOK_EPUB => SRC + SRC_EPUB do
