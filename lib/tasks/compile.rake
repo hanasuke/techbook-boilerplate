@@ -1,4 +1,5 @@
-# Copyright (c) 2020 Kenshi Muto
+# Original work Copyright (c) 2020 Kenshi Muto
+# Modified work Copyright (c) 2025 Naoki Hanakawa(@hanasuke)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal

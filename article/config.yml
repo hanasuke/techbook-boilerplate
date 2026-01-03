@@ -27,6 +27,7 @@ booktitle: { name: "本の名前ですXYZ", file-as: "ホンノナマエデスXY
 # 著者名。「, 」で区切って複数指定できる
 aut: [{ name: "なおすけ", file-as: "ナオスケ" }]
 
+# TODO
 # 以下はオプション
 # 以下はオプション(autと同じように配列書式で複数指定可能)。
 # 読みの指定はaut:の例を参照。
@@ -78,7 +79,7 @@ date: 2025-12-31 # TODO
 history: [["2025-12-31 第1版 v1.0.0"]] # TODO
 # 権利表記(配列で複数指定可)
 # rights: (C) 2016 Re:VIEW Developers
-rights: (C) 2025 トドランド
+rights: (C) 2025 トドランド # TODO
 # description: 説明
 # subject: 短い説明用タグ(配列で複数指定可)
 # type: 書籍のカテゴリーなど(配列で複数指定可)
@@ -90,8 +91,9 @@ rights: (C) 2025 トドランド
 # デバッグフラグ。nullでないときには一時ファイルをカレントディレクトリに作成し、削除もしない
 debug: null
 
+# TODO
 # 固有IDに使用するドメイン。省略した場合は時刻に基づくランダムUUIDが入る
-urnid: urn:uuid:https://github.com/hanasuke/ # TODO
+urnid: urn:uuid:https://github.com/hanasuke/techbook-boilerplate
 #
 # ISBN。省略した場合はurnidが入る
 # isbn: null
@@ -163,7 +165,7 @@ colophon: true
 # advfile: null
 
 # 取り込む画像が格納されているディレクトリ。省略した場合は以下
-# imagedir: images
+imagedir: img
 
 # 取り込むフォントが格納されているディレクトリ。省略した場合は以下
 # fontdir: fonts
@@ -359,11 +361,12 @@ texstyle: ["reviewmacro"]
 # serial_pagination=trueはアラビア数字通し
 # hiddenfolio=nikko-pcは日光企画向けのノドへの隠しノンブル配置
 #
-# B5の設定(10pt 40文字×35行) - 紙版
+# B5の設定(10pt 40文字×35行) - 紙版 (右開き)
+# TODO: トンボ付きの出力設定を入れる
 texdocumentclass:
   [
     "review-jsbook",
-    "media=print,paper=b5,serial_pagination=true,hiddenfolio=nikko-pc,openany,fontsize=10pt,baselineskip=15.4pt,line_length=40zw,number_of_lines=35,head_space=30mm,headsep=10mm,headheight=5mm,footskip=10mm",
+    "media=ebook,paper=b5,serial_pagination=true,openright,fontsize=10pt,baselineskip=15.4pt,line_length=40zw,number_of_lines=35,head_space=30mm,headsep=10mm,headheight=5mm,footskip=10mm",
   ]
 # B5の設定(10pt 40文字×35行) - 電子版
 # texdocumentclass: ["review-jsbook", "media=ebook,paper=b5,serial_pagination=true,openany,fontsize=10pt,baselineskip=15.4pt,line_length=40zw,number_of_lines=35,head_space=30mm,headsep=10mm,headheight=5mm,footskip=10mm"]
